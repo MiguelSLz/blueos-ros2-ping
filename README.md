@@ -1,7 +1,9 @@
 # [BlueOS ROS2 Extension](https://github.com/itskalvik/blueos-ros2)
 
 This extension enables controlling an ArduPilot-based vehicle (BlueBoat, BlueROV) via [ROS2](https://github.com/ros2)
+
 Fork: Changes on MAVROS + ping360_sonar package installation.
+
 The extension includes the following packages:
 
 - [MAVROS](https://github.com/mavlink/mavros): Includes a launch file to communicate with the flight controller (vehicle)
