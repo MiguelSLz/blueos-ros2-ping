@@ -1,15 +1,26 @@
 ARG ROS_DISTRO=humble
 FROM ros:$ROS_DISTRO-ros-base
 
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports jammy main restricted universe multiverse" > /etc/apt/sources.list && \
+    echo "deb http://ports.ubuntu.com/ubuntu-ports jammy-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+    echo "deb http://ports.ubuntu.com/ubuntu-ports jammy-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+    echo "deb http://ports.ubuntu.com/ubuntu-ports jammy-security main restricted universe multiverse" >> /etc/apt/sources.list
+
 RUN apt-get update \
     && apt-get install -q -y --no-install-recommends \
     git tmux nano nginx wget netcat \
     libboost-all-dev \
+    libasio-dev \
+    libgeographic-dev \
+    geographiclib-tools \
     ros-${ROS_DISTRO}-geographic-msgs \
     ros-${ROS_DISTRO}-foxglove-bridge \
     ros-${ROS_DISTRO}-image-transport \
     ros-${ROS_DISTRO}-angles \
-    python3-dev python3-pip \
+    ros-${ROS_DISTRO}-diagnostic-updater \
+    ros-${ROS_DISTRO}-eigen-stl-containers \
+    ros-${ROS_DISTRO}-mavlink \
+    python3-dev python3-pip python3-click \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
@@ -19,14 +30,14 @@ RUN pip3 install --no-cache-dir setuptools pip packaging -U \
 
 COPY ros2_ws /home/ros2_ws
 WORKDIR /home/ros2_ws/src
-RUN git clone --recurse-submodules https://github.com/mavlink/mavlink.git && \
-    git clone https://github.com/mavlink/mavros.git -b ros2 && \
+RUN git clone https://github.com/mavlink/mavros.git -b ros2 && \
     git clone --recurse-submodules https://github.com/CentraleNantesRobotics/ping360_sonar.git -b ros2
 
 COPY imu.cpp.modificado /home/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
 
 WORKDIR /home/ros2_ws/
 RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && rosdep update \
     && rosdep install --from-paths src --ignore-src -r -y \
     && python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
     && colcon build --symlink-install --parallel-workers 1 \
@@ -68,6 +79,10 @@ LABEL authors='[\
   {\
     "name": "Kalvik Jakkala",\
     "email": "itskalvik@gmail.com"\
+  },\
+  {\
+    "name": "Miguel Soria",\
+    "email": "miguel.luz@labmetro.ufsc.br"\
   }\
 ]'
 LABEL company='{\
@@ -75,7 +90,7 @@ LABEL company='{\
   "name": "ItsKalvik",\
   "email": "itskalvik@gmail.com"\
 }'
-LABEL readme="https://raw.githubusercontent.com/itskalvik/blueos-ros2/master/README.md"
+LABEL readme="https://raw.githubusercontent.com/miguelslz/blueos-ros2/main/README.md"
 LABEL type="other"
 LABEL tags='[\
   "ros2",\
