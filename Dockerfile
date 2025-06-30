@@ -3,29 +3,39 @@ FROM ros:$ROS_DISTRO-ros-base
 
 RUN apt-get update \
     && apt-get install -q -y --no-install-recommends \
-    tmux nano nginx wget netcat \
-    ros-${ROS_DISTRO}-mavros ros-${ROS_DISTRO}-mavros-extras ros-${ROS_DISTRO}-mavros-msgs \
+    git tmux nano nginx wget netcat \
+    libboost-all-dev \
     ros-${ROS_DISTRO}-geographic-msgs \
     ros-${ROS_DISTRO}-foxglove-bridge \
+    ros-${ROS_DISTRO}-image-transport \
+    ros-${ROS_DISTRO}-angles \
     python3-dev python3-pip \
     && apt-get autoremove -y \
     && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip3 install --no-cache-dir setuptools pip packaging -U
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir setuptools pip packaging -U \
+    && pip3 install --no-cache-dir bluerobotics-ping
 
 COPY ros2_ws /home/ros2_ws
-RUN cd /home/ros2_ws/ \
+WORKDIR /home/ros2_ws/src
+RUN git clone --recurse-submodules https://github.com/mavlink/mavlink.git && \
+    git clone https://github.com/mavlink/mavros.git -b ros2 && \
+    git clone --recurse-submodules https://github.com/CentraleNantesRobotics/ping360_sonar.git -b ros2
+
+COPY imu.cpp.modificado /home/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
+
+WORKDIR /home/ros2_ws/
+RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && rosdep install --from-paths src --ignore-src -r -y \
     && python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
-    && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
-    && colcon build --symlink-install \
+    && colcon build --symlink-install --parallel-workers 1 \
     && ros2 run mavros install_geographiclib_datasets.sh \
     && echo "source /ros_entrypoint.sh" >> ~/.bashrc \
     && echo "source /home/ros2_ws/install/setup.sh " >> ~/.bashrc
 
-# Setup environment variables to configure mavros_control
 ENV NAVIGATION_TYPE=0 FOXGLOVE=True
 
-# Setup ttyd for web terminal interface
 ADD files/install-ttyd.sh /install-ttyd.sh
 RUN bash /install-ttyd.sh && rm /install-ttyd.sh
 COPY files/tmux.conf /etc/tmux.conf
@@ -36,8 +46,7 @@ COPY files/nginx.conf /etc/nginx/nginx.conf
 
 ADD files/start.sh /start.sh
 
-# Add docker configuration
-LABEL version="0.0.2"
+LABEL version="1.0.0-custom"
 LABEL permissions='{\
   "NetworkMode": "host",\
   "HostConfig": {\
@@ -45,14 +54,16 @@ LABEL permissions='{\
       "/dev:/dev:rw",\
       "/usr/blueos/extensions/ros2/:/home/persistent_ws/:rw"\
     ],\
-    "Privileged": true,\
-    "NetworkMode": "host"\
+    "Privileged": true\
   },\
   "Env": [\
     "NAVIGATION_TYPE=0", \
     "FOXGLOVE=True" \
   ]\
 }'
+LABEL io.blueos.web-ui.port="80"
+LABEL io.blueos.web-ui.path="/"
+
 LABEL authors='[\
   {\
     "name": "Kalvik Jakkala",\
@@ -71,6 +82,6 @@ LABEL tags='[\
   "robot"\
 ]'
 
-# Keep bash alive even if there is an error
 RUN echo "set +e" >> ~/.bashrc
 ENTRYPOINT [ "/start.sh" ]
+
