@@ -37,9 +37,11 @@ COPY imu.cpp.modificado /home/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
 
 WORKDIR /home/ros2_ws/
 RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" \
-    && rosdep update \
-    && rosdep install --from-paths src --ignore-src -r -y \
-    && python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
+    && rosdep update
+
+RUN rosdep install --from-paths src --ignore-src -r -y
+
+RUN python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
     && colcon build --symlink-install --parallel-workers 1 \
     && ros2 run mavros install_geographiclib_datasets.sh \
     && echo "source /ros_entrypoint.sh" >> ~/.bashrc \
@@ -99,4 +101,3 @@ LABEL tags='[\
 
 RUN echo "set +e" >> ~/.bashrc
 ENTRYPOINT [ "/start.sh" ]
-
