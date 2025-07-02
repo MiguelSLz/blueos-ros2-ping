@@ -87,8 +87,8 @@ LABEL authors='[\
 ]'
 LABEL company='{\
   "about": "",\
-  "name": "ItsKalvik",\
-  "email": "itskalvik@gmail.com"\
+  "name": "VORIS / ItsKalvik",\
+  "email": "projeto.voris@labmetro.ufsc.br"\
 }'
 LABEL readme="https://raw.githubusercontent.com/miguelslz/blueos-ros2/main/README.md"
 LABEL type="other"
