@@ -2,9 +2,6 @@
 
 This extension enables controlling an ArduPilot-based vehicle (BlueBoat, BlueROV) via [ROS2](https://github.com/ros2)
 
-## Fork
-Changes on MAVROS and some extras ROS2 packages installation.
-
 The extension includes the following packages:
 
 - [MAVROS](https://github.com/mavlink/mavros): Includes a launch file to communicate with the flight controller (vehicle)
@@ -18,6 +15,9 @@ The extension includes the following packages:
 The extension also mounts the following folder on the computer running [BlueOS](https://blueos.cloud/) to the home directory folder in the extension's Docker container, which can be used to store files that need to persist across reboots, such as a ROS2 workspace with custom code:
 
 ```/usr/blueos/extensions/ros2/``` -> ```/home/persistent_ws/```
+
+## Fork
+Changes on MAVROS and some extras ROS2 packages installation.
 
 ## Setup
 This extension works only on 64-bit version of [BlueOS](https://github.com/bluerobotics/BlueOS). You can get the 64-bit image of BlueOS for Raspberry Pi from [here](https://github.com/bluerobotics/BlueOS/releases/download/1.4.0-beta.14/BlueOS-raspberry-linux-arm64-v8-bookworm-pi5.zip).
