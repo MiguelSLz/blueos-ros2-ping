@@ -10,7 +10,7 @@ The extension includes the following packages:
 
 - [Foxglove ](https://docs.foxglove.dev/docs): Web-based RViz for visualizing ROS2 data
 
-- [ping360_sonar ]([https://docs.foxglove.dev/docs](https://github.com/CentraleNantesRobotics/ping360_sonar)): A ROS 2 package for the BlueRobotics Ping360 Sonar
+- [ping360_sonar](https://github.com/CentraleNantesRobotics/ping360_sonar): A ROS 2 package for the BlueRobotics Ping360 Sonar
 
 The extension also mounts the following folder on the computer running [BlueOS](https://blueos.cloud/) to the home directory folder in the extension's Docker container, which can be used to store files that need to persist across reboots, such as a ROS2 workspace with custom code:
 
