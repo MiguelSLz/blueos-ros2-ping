@@ -2,7 +2,8 @@
 
 This extension enables controlling an ArduPilot-based vehicle (BlueBoat, BlueROV) via [ROS2](https://github.com/ros2)
 
-Fork: Changes on MAVROS + ping360_sonar package installation.
+## Fork
+Changes on MAVROS and some extras ROS2 packages installation.
 
 The extension includes the following packages:
 
@@ -11,6 +12,8 @@ The extension includes the following packages:
 - [mavros_control](https://github.com/itskalvik/mavros_control): Includes a python script to control the vehicle using GPS-based waypoints (BlueBoat) and RC-control (BlueROV2) via mavros
 
 - [Foxglove ](https://docs.foxglove.dev/docs): Web-based RViz for visualizing ROS2 data
+
+- [ping360_sonar ]([https://docs.foxglove.dev/docs](https://github.com/CentraleNantesRobotics/ping360_sonar)): A ROS 2 package for the BlueRobotics Ping360 Sonar
 
 The extension also mounts the following folder on the computer running [BlueOS](https://blueos.cloud/) to the home directory folder in the extension's Docker container, which can be used to store files that need to persist across reboots, such as a ROS2 workspace with custom code:
 
