@@ -33,7 +33,7 @@ WORKDIR /home/ros2_ws/src
 RUN git clone https://github.com/mavlink/mavros.git -b ros2 && \
     git clone --recurse-submodules https://github.com/CentraleNantesRobotics/ping360_sonar.git -b ros2
 
-COPY imu.cpp.modificado /home/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
+COPY files/imu.cpp.modificado /home/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
 
 WORKDIR /home/ros2_ws/
 RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" \
