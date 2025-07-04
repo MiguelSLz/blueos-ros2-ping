@@ -33,4 +33,4 @@ create_service 'ttyd' 'ttyd -p 88 sh -c "/usr/bin/tmux attach -t ROS2 || /usr/bi
 
 echo "Done!"
 sleep infinity
-echo "infinity didn't work"
+echo "sleep infinity didn't work"
