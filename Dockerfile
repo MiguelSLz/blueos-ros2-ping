@@ -40,7 +40,11 @@ RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && rosdep update \
     && rosdep install --from-paths src --ignore-src -r -y \
     && python3 -m pip install --no-cache-dir -r src/mavros_control/requirements.txt \
-    && colcon build --symlink-install --parallel-workers 1 \
+    && colcon build --parallel-workers 1
+
+WORKDIR /home/ros2_ws/
+RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && . "/home/ros2_ws/install/setup.sh" \
     && ros2 run mavros install_geographiclib_datasets.sh \
     && echo "source /ros_entrypoint.sh" >> ~/.bashrc \
     && echo "source /home/ros2_ws/install/setup.sh " >> ~/.bashrc
