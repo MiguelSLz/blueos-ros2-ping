@@ -17,7 +17,7 @@ The extension also mounts the following folder on the computer running [BlueOS](
 ```/usr/blueos/extensions/ros2/``` -> ```/home/persistent_ws/```
 
 ## Fork
-Changes on MAVROS and some extras ROS2 packages installation.
+Allows to make changes to the source code of the MAVROS package and add some extras ROS2 packages listed above.
 
 ## Setup
 This extension works only on 64-bit version of [BlueOS](https://github.com/bluerobotics/BlueOS). You can get the 64-bit image of BlueOS for Raspberry Pi from [here](https://github.com/bluerobotics/BlueOS/releases/download/1.4.0-beta.14/BlueOS-raspberry-linux-arm64-v8-bookworm-pi5.zip).
