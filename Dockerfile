@@ -9,10 +9,7 @@ RUN echo "deb http://ports.ubuntu.com/ubuntu-ports jammy main restricted univers
 RUN apt-get update \
     && apt-get install -q -y --no-install-recommends \
     git tmux nano nginx wget netcat \
-    libboost-all-dev \
-    libasio-dev \
-    libgeographic-dev \
-    geographiclib-tools \
+    libboost-all-dev libasio-dev libgeographic-dev geographiclib-tools \
     ros-${ROS_DISTRO}-geographic-msgs \
     ros-${ROS_DISTRO}-foxglove-bridge \
     ros-${ROS_DISTRO}-image-transport \
@@ -20,7 +17,7 @@ RUN apt-get update \
     ros-${ROS_DISTRO}-diagnostic-updater \
     ros-${ROS_DISTRO}-eigen-stl-containers \
     ros-${ROS_DISTRO}-mavlink \
-    python3-dev python3-pip python3-click \
+    python3-dev python3-pip python3-click python3-scipy \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
@@ -50,6 +47,7 @@ RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" \
     && echo "source /home/ros2_ws/install/setup.sh " >> ~/.bashrc
 
 ENV NAVIGATION_TYPE=0 FOXGLOVE=True
+ENV ROS_DOMAIN_ID=1
 
 ADD files/install-ttyd.sh /install-ttyd.sh
 RUN bash /install-ttyd.sh && rm /install-ttyd.sh
