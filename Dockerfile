@@ -30,7 +30,14 @@ WORKDIR /home/ros2_ws/src
 RUN git clone https://github.com/mavlink/mavros.git -b ros2 && \
     git clone --recurse-submodules https://github.com/CentraleNantesRobotics/ping360_sonar.git -b ros2
 
+# ----------- Changes on source code stay here! ----------- #
+
 COPY files/imu.cpp.modificado /home/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
+COPY files/apm.launch.modificado /home/ros2_ws/src/mavros/mavros/launch/apm.launch
+COPY files/base.launch.py.modificado /home/ros2_ws/src/mavros_control/launch/base.launch.py
+COPY files/demo.launch.py.modificado /home/ros2_ws/src/mavros_control/launch/demo.launch.py
+
+# ----------- Changes on source code stay here! ----------- #
 
 WORKDIR /home/ros2_ws/
 RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" \
