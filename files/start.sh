@@ -3,6 +3,18 @@
 echo "Starting.."
 [ ! -e /var/run/nginx.pid ] && nginx&
 
+WELCOME_MSG='
+clear && \
+echo "Use one of the commands above to start mavros_control and Foxglove" && \
+echo "" && \
+echo "1- To start only communication: " && \
+echo "    ros2 launch mavros_control base.launch.py " && \
+echo "" && \
+echo "2- To start communication and controller node (Arm the ROV): " && \
+echo "    ros2 launch mavros_control demo.launch.py " && \
+echo ""
+'
+
 # Create a new tmux session
 tmux -f /etc/tmux.conf start-server
 tmux new -d -s "ROS2"
@@ -13,7 +25,7 @@ tmux split-window -h
 tmux select-pane -t 0
 tmux split-window -h
 
-tmux send-keys -t 0 "ros2 launch mavros_control demo.launch.py" Enter
+tmux send-keys -t 0 "$WELCOME_MSG" Enter
 tmux send-keys -t 1 
 tmux send-keys -t 2 
 tmux send-keys -t 3 
