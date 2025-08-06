@@ -43,6 +43,13 @@ This extension includes the following [ROS 2 Jazzy](https://docs.ros.org/en/jazz
   A WebSocket bridge to stream ROS 2 data into the Foxglove web interface.
   * Fully compatible with the BlueOS Foxglove plugin
 
+- **[ping360_sonar](https://github.com/CentraleNantesRobotics/ping360_sonar)**
+
+  A ROS 2 package for the BlueRobotics Ping360 Sonar
+
+## Fork
+
+Allows to make changes to the source code of the MAVROS package and add some extras ROS2 packages listed above.
 
 ## 📋 Prerequisites
 
@@ -63,6 +70,7 @@ You can install the ROS 2 Extension directly from the **BlueOS App Store**
 ## ⚙️ Usage
 - **Automatic Launch:** The extension launches automatically when BlueOS boots.
 - **Web Terminal:** Access the extension’s terminal via the left-hand panel in the BlueOS UI.
+- **Launch:** ros2 launch mavros_control mavros.launch.
 - **Persistent Storage:** The extension links the following directories
   - Host path: ```/usr/blueos/extensions/ros2/```
   - Container path: ```/root/persistent_ws/```

@@ -3,22 +3,48 @@ FROM ros:$ROS_DISTRO-ros-base
 ENV DEBIAN_FRONTEND=noninteractive PIP_BREAK_SYSTEM_PACKAGES=1
 WORKDIR /root/
 
-# Install general packages (including mavros and foxglove)
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports jammy main restricted universe multiverse" > /etc/apt/sources.list && \
+    echo "deb http://ports.ubuntu.com/ubuntu-ports jammy-updates main restricted universe multiverse" >> /etc/apt/sources.list && \
+    echo "deb http://ports.ubuntu.com/ubuntu-ports jammy-backports main restricted universe multiverse" >> /etc/apt/sources.list && \
+    echo "deb http://ports.ubuntu.com/ubuntu-ports jammy-security main restricted universe multiverse" >> /etc/apt/sources.list
+
+# Install general packages (including foxglove)
 RUN rm /var/lib/dpkg/info/libc-bin.* \
     && apt-get clean \
     && apt-get update \
     && apt-get install libc-bin \
     && apt-get install -q -y --no-install-recommends \
-    tmux nano nginx wget \
-    ros-${ROS_DISTRO}-mavros ros-${ROS_DISTRO}-mavros-extras ros-${ROS_DISTRO}-mavros-msgs \
+    libboost-all-dev libasio-dev libgeographic-dev geographiclib-tools \
+    git tmux nano nginx wget netcat \
     ros-${ROS_DISTRO}-geographic-msgs \
     ros-${ROS_DISTRO}-foxglove-bridge \
-    python3-dev python3-pip python3-venv \
+    ros-${ROS_DISTRO}-image-transport \
+    ros-${ROS_DISTRO}-angles \
+    ros-${ROS_DISTRO}-diagnostic-updater \
+    ros-${ROS_DISTRO}-eigen-stl-containers \
+    ros-${ROS_DISTRO}-mavlink \
+    python3-dev python3-pip python3-click python3-scipy python3-venv \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
+# Install mavros and Ping360 packages by source code
+RUN pip3 install --no-cache-dir setuptools -U \
+    && pip3 install --no-cache-dir bluerobotics-ping
+
+COPY ros2_ws /root/ros2_ws
+WORKDIR /root/ros2_ws/src
+RUN git clone https://github.com/mavlink/mavros.git -b ros2 && \
+    git clone --recurse-submodules https://github.com/CentraleNantesRobotics/ping360_sonar.git -b ros2
+
+# ----------- Changes on source code stay here ----------- #
+
+COPY files/imu.cpp.modificado /root/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
+
+# -------------------------------------------------------- #
+
 # Install gscam2 deps
+WORKDIR /root/
 RUN apt-get update \
     && apt-get install -q -y --no-install-recommends \
     libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
@@ -37,14 +63,14 @@ RUN cd /root/ \
     && python3 setup.py install --user
 
 # Build ROS2 workspace with remaining packages
-COPY ros2_ws /root/ros2_ws
-RUN cd /root/ros2_ws/ \
-    && pip3 install --no-cache-dir -r src/mavros_control/requirements.txt \
+WORKDIR /root/ros2_ws/
+RUN pip3 install --no-cache-dir -r src/mavros_control/requirements.txt \
     && git clone https://github.com/ptrmu/ros2_shared.git --depth 1 src/ros2_shared \
     && apt-get update \
     && rosdep install --from-paths src --ignore-src -r -y \
     && . "/opt/ros/${ROS_DISTRO}/setup.sh" \
-    && colcon build --symlink-install \
+    && colcon build \
+    && . /root/ros2_ws/install/setup.sh \
     && ros2 run mavros install_geographiclib_datasets.sh \
     && apt-get autoremove -y \
     && apt-get clean -y \
@@ -66,7 +92,7 @@ COPY files/register_service /site/register_service
 COPY files/start.sh /start.sh
 
 # Add docker configuration
-LABEL version="0.1.0"
+LABEL version="1.0.5"
 LABEL permissions='{\
   "NetworkMode": "host",\
   "HostConfig": {\
@@ -87,14 +113,18 @@ LABEL authors='[\
   {\
     "name": "Kalvik Jakkala",\
     "email": "itskalvik@gmail.com"\
+  },\
+  {\
+    "name": "Miguel Soria",\
+    "email": "miguel.luz@labmetro.ufsc.br"\
   }\
 ]'
 LABEL company='{\
   "about": "",\
-  "name": "ItsKalvik",\
-  "email": "itskalvik@gmail.com"\
+  "name": "VORIS / ItsKalvik",\
+  "email": "projeto.voris@labmetro.ufsc.br"\
 }'
-LABEL readme="https://raw.githubusercontent.com/itskalvik/blueos-ros2/master/README.md"
+LABEL readme="https://raw.githubusercontent.com/miguelslz/blueos-ros2/main/README.md"
 LABEL type="other"
 LABEL tags='[\
   "ros2",\
