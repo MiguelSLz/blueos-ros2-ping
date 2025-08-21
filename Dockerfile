@@ -35,11 +35,12 @@ RUN pip3 install --no-cache-dir setuptools -U \
 COPY ros2_ws /root/ros2_ws
 WORKDIR /root/ros2_ws/src
 RUN git clone https://github.com/mavlink/mavros.git -b ros2 && \
-    git clone --recurse-submodules https://github.com/CentraleNantesRobotics/ping360_sonar.git -b ros2
+    git clone --recurse-submodules https://github.com/JetSeaAI/ping360_sonar.git -b ros2
 
 # ----------- Changes on source code stay here ----------- #
 
 COPY files/imu.cpp.modificado /root/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
+COPY files/ping360_files/ping360_node.cpp.modificado /root/ros2_ws/src/ping360_sonar/ping360_sonar/src/ping360_node.cpp
 
 # -------------------------------------------------------- #
 

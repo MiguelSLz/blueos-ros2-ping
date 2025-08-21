@@ -43,7 +43,7 @@ This extension includes the following [ROS 2 Jazzy](https://docs.ros.org/en/jazz
   A WebSocket bridge to stream ROS 2 data into the Foxglove web interface.
   * Fully compatible with the BlueOS Foxglove plugin
 
-- **[ping360_sonar](https://github.com/CentraleNantesRobotics/ping360_sonar)**
+- **[ping360_sonar](https://github.com/JetSeaAI/ping360_sonar)**
 
   A ROS 2 package for the BlueRobotics Ping360 Sonar
 
@@ -58,19 +58,9 @@ Allows to make changes to the source code of the MAVROS package and add some ext
   👉 Download the latest Raspberry Pi image from the [BlueOS Releases page](https://github.com/bluerobotics/BlueOS/releases/).
 
 
-## 🧰 Installation
-You can install the ROS 2 Extension directly from the **BlueOS App Store**
-
-
-<p align="center">
-<img src=".assets/installation.gif" width="100%"/> 
-</p>
-
-
 ## ⚙️ Usage
 - **Automatic Launch:** The extension launches automatically when BlueOS boots.
 - **Web Terminal:** Access the extension’s terminal via the left-hand panel in the BlueOS UI.
-- **Launch:** ros2 launch mavros_control mavros.launch.
 - **Persistent Storage:** The extension links the following directories
   - Host path: ```/usr/blueos/extensions/ros2/```
   - Container path: ```/root/persistent_ws/```
@@ -80,6 +70,14 @@ You can install the ROS 2 Extension directly from the **BlueOS App Store**
 <p align="center">
 <img src=".assets/usage.gif" width="100%"/> 
 </p>
+
+## ⚙️ Launch
+
+```bash
+ros2 launch mavros_control mavros.launch
+```
+
+To modify parameters, std deviation, frame_ids on launch file, change the apm_config.yaml, in mavros_control/launch/apm_config.yaml.
 
 ## 🛠️ Build and Run Locally
 
@@ -117,9 +115,9 @@ The extension will be accessible at: [http://localhost:4717/](http://localhost:4
   * On the same network: [http://blueos-avahi.local/](http://blueos-avahi.local/)
 * Navigate to the ```Extensions``` tab, then switch to the ```INSTALLED``` tab.
 * Click the ```+``` button (bottom-right), and fill in the fields:
-    * Extension Identifier: ```ItsKalvik.ROS2```
+    * Extension Identifier: ```Voris.ROS2Custom```
     * Extension Name: ```ROS2```
-    * Docker image: ```YOURDOCKERHUBUSER/YOURDOCKERHUBREPO```
+    * Docker image: ```miguelslz/ros2-custom-blueos```
     * Docker tag: ```latest```
     * Original Settings:
       ```json
