@@ -34,8 +34,9 @@ RUN pip3 install --no-cache-dir setuptools -U \
 
 COPY ros2_ws /root/ros2_ws
 WORKDIR /root/ros2_ws/src
-RUN git clone https://github.com/mavlink/mavros.git -b ros2 && \
-    git clone --recurse-submodules https://github.com/JetSeaAI/ping360_sonar.git -b ros2
+RUN git config --global url."https://github.com/".insteadOf "git@github.com:" && \
+    git clone https://github.com/mavlink/mavros.git -b ros2 && \
+    git clone --recurse-submodules https://github.com/JetSeaAI/ping360_sonar.git
 
 # ----------- Changes on source code stay here ----------- #
 
