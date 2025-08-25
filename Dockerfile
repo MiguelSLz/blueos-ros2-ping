@@ -28,22 +28,9 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-# Install mavros and Ping360 packages by source code
+# Install pip3 and bluerobotics-ping
 RUN pip3 install --no-cache-dir setuptools -U \
     && pip3 install --no-cache-dir bluerobotics-ping
-
-COPY ros2_ws /root/ros2_ws
-WORKDIR /root/ros2_ws/src
-RUN git config --global url."https://github.com/".insteadOf "git@github.com:" && \
-    git clone https://github.com/mavlink/mavros.git -b ros2 && \
-    git clone --recurse-submodules https://github.com/JetSeaAI/ping360_sonar.git
-
-# ----------- Changes on source code stay here ----------- #
-
-COPY files/imu.cpp.modificado /root/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
-COPY files/ping360_files/ping360_node.cpp.modificado /root/ros2_ws/src/ping360_sonar/ping360_sonar/src/ping360_node.cpp
-
-# -------------------------------------------------------- #
 
 # Install gscam2 deps
 WORKDIR /root/
@@ -63,6 +50,24 @@ RUN cd /root/ \
     && cd ping-python \
     && git checkout 3d41ddd \
     && python3 setup.py install --user
+
+# Install packages by source code
+COPY ros2_ws /root/ros2_ws
+WORKDIR /root/ros2_ws/src
+RUN git config --global url."https://github.com/".insteadOf "git@github.com:" && \
+    git clone https://github.com/mavlink/mavros.git -b ros2 && \
+    git clone --recurse-submodules https://github.com/JetSeaAI/ping360_sonar.git && \
+    git clone https://github.com/clydemcqueen/gscam2.git && \
+    git clone https://github.com/itskalvik/bluerobotics_sonar.git && \
+    git clone https://github.com/itskalvik/sonoptix_sonar.git
+    
+# ----------- Changes on source code stay here ----------- #
+    
+COPY files/imu.cpp.modificado /root/ros2_ws/src/mavros/mavros/src/plugins/imu.cpp
+COPY files/ping360_files/ping360_node.cpp.modificado /root/ros2_ws/src/ping360_sonar/ping360_sonar/src/ping360_node.cpp
+    
+# -------------------------------------------------------- #
+    
 
 # Build ROS2 workspace with remaining packages
 WORKDIR /root/ros2_ws/
